@@ -1,0 +1,16 @@
+Создайте файл с каталогами:
+
+yc resource-manager folder list --cloud-id <cloud-id> | egrep '\w{20}' | cut -b 3-23 >> folders.txt
+
+Создайте ip-public-list.sh
+#!/bin/bash
+while read y
+do
+yc vpc address list --folder-id $y
+done < folders.txt
+
+Присвойте ip-public-list.sh право на выполенние
+sudo chmod +x ip-public-list.sh
+
+Вызовите ip-public-list.sh:
+./ip-public-list.sh | egrep '[0-9.]{8}' | cut -d'|' -f4,2
